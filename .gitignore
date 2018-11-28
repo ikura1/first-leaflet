@@ -1,6 +1,6 @@
 geojson/
 lib/
 .vscode/
-lib/*
-node_modules/*
+node_modules/
 .DS_Store
+source_data/
