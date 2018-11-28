@@ -1,8 +1,3 @@
-import L from "leaflet";
-import {} from "leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js";
-import "leaflet/dist/leaflet.css";
-import "./css/style.css";
-
 function get_json(url) {
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.open("GET", url, false);
@@ -59,7 +54,6 @@ let vtile = L.vectorGrid.slicer(
 );
 */
 
-// うまく作成できてない見直す
 // tippecanoe -l gs_map -rg -z18 -Z6 -o mvt.mbtiles 9001reproject.geojson
 // tippecanoe -o mvt.mbtiles 9001reproject.geojson
 // mb-util --image_format=pdf mvt.mbtiles mvt_tile
@@ -77,7 +71,6 @@ let ogr_layer = L.vectorGrid.protobuf("geojson/ogr_tile/{z}/{x}/{y}.pbf", {
   vectorTileLayerStyles: {}
 });
 
-//  .addTo(mymap);
 // tippecanoe -e veg 9001reproject.geojson
 // gzip -d -v -r -S .pbf *
 // find . -type f -exec mv -v '{}' '{}'.pbf \;
