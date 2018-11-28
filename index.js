@@ -43,16 +43,6 @@ let polygon_layer = L.geoJson(polygon_json, {
   },
   style: myStyle
 });
-/*
-let tile = L.tileLayer(
-  "https://cyberjapandata.gsi.go.jp/xyz/experimental_rdcl/{z}/{x}/{y}.geojson"
-);
-
-let vtile = L.vectorGrid.slicer(
-  "https://cyberjapandata.gsi.go.jp/xyz/experimental_rdcl/{z}/{x}/{y}.geojson",
-  { rendererFactory: L.svg.tile }
-);
-*/
 
 // tippecanoe -l gs_map -rg -z18 -Z6 -o mvt.mbtiles 9001reproject.geojson
 // tippecanoe -o mvt.mbtiles 9001reproject.geojson
