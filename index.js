@@ -5,10 +5,9 @@ function get_json(url) {
   return JSON.parse(xmlhttp.response);
 }
 
-// window.onload = function () {
+// LeafletのMap部分
 let mymap = L.map("mapid", {
   center: [34.691695541638275, 135.19788582261447],
-  // center: [42.7450, 141.9123],
   panControl: true,
   zoom: 16,
   minZoom: 2,
@@ -16,7 +15,6 @@ let mymap = L.map("mapid", {
   zoomsliderControl: true,
   zoomControl: false
 });
-// layer追加まで行くと出力される
 
 var myStyle = {
   color: "#ff7800",
@@ -24,6 +22,8 @@ var myStyle = {
   opacity: 0.65
 };
 
+// vectortileとの比較用レイヤ
+// 普通のgeojson
 const polygon_json = get_json("geojson/9001reproject.geojson");
 let polygon_layer = L.geoJson(polygon_json, {
   onEachFeature: function(feat, layer) {
@@ -44,6 +44,21 @@ let polygon_layer = L.geoJson(polygon_json, {
   style: myStyle
 });
 
+var slicer_layer = L.vectorGrid.slicer(polygon_json, {
+  rendererFactory: L.canvas.tile,
+  maxZoom: 22,
+  indexMaxZoom: 5, // max zoom in the initial tile index
+  interactive: true,
+  vectorTileLayerStyles: {
+    // A plain set of L.Path options.
+    sliced: {
+      weight: 2,
+      color: "#ffff00",
+      fill: true,
+      opacity: 0.65
+    }
+  }
+});
 // tippecanoe -l gs_map -rg -z18 -Z6 -o mvt.mbtiles 9001reproject.geojson
 // tippecanoe -o mvt.mbtiles 9001reproject.geojson
 // mb-util --image_format=pdf mvt.mbtiles mvt_tile
@@ -103,22 +118,6 @@ let tipp_layer = L.vectorGrid.protobuf("geojson/tipp_veg/{z}/{x}/{y}.pdf", {
   }
 });
 
-var slicer_layer = L.vectorGrid.slicer(polygon_json, {
-  rendererFactory: L.canvas.tile,
-  maxZoom: 22,
-  indexMaxZoom: 5, // max zoom in the initial tile index
-  interactive: true,
-  vectorTileLayerStyles: {
-    // A plain set of L.Path options.
-    sliced: {
-      weight: 2,
-      color: "#ffff00",
-      fill: true,
-      opacity: 0.65
-    }
-  }
-});
-
 let Map_o = {
   mvt: mvt_layer,
   ogr: ogr_layer,
@@ -128,7 +127,6 @@ let Map_o = {
   tipp_layer: tipp_layer
 };
 
-// markerClusterGroup グループレイヤー登録ができる?
 let Map_b = {};
 L.control.scale({ maxWidth: 250, imperial: false }).addTo(mymap);
 L.control.layers(Map_b, Map_o, { collapsed: false }).addTo(mymap);
