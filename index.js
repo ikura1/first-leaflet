@@ -25,25 +25,6 @@ var myStyle = {
 // vectortileとの比較用レイヤ
 // 普通のgeojson
 const polygon_json = get_json("geojson/9001reproject.geojson");
-let polygon_layer = L.geoJson(polygon_json, {
-  onEachFeature: function(feat, layer) {
-    // 1. geojsonのpropertiesから情報を取得(座標系回りや渡す座標を考える必要がある)
-    // 2. APIに座標を投げる
-    const columns = ["遺跡名", "区番号", "所在地", "時代", "種類", "備考"];
-    const headers = columns.map(value => "<th>" + value + "</th>").join("");
-
-    const values = columns
-      .map(value => (feat.properties[value] ? feat.properties[value] : ""))
-      .map(value => "<td>" + value + "</td>")
-      .join("");
-    // let values = values.map(value => "<td>" + value + "</td>").join("")
-    const table =
-      "<table><tr>" + headers + "</tr>" + "<tr>" + values + "</tr></table>";
-    layer.bindPopup(table);
-  },
-  style: myStyle
-});
-
 var slicer_layer = L.vectorGrid.slicer(polygon_json, {
   rendererFactory: L.canvas.tile,
   maxZoom: 22,
@@ -70,12 +51,8 @@ let ogr_layer = L.vectorGrid.protobuf("geojson/ogr_tile/{z}/{x}/{y}.pbf", {
 
 
 let Map_o = {
-  mvt: mvt_layer,
   ogr: ogr_layer,
-  polygon: polygon_layer,
-  slicer: slicer_layer,
-  protobuf: protobuf_layer,
-  tipp_layer: tipp_layer
+  slicer: slicer_layer
 };
 
 let Map_b = {};
