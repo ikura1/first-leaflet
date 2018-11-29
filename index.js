@@ -34,7 +34,7 @@ var slicer_layer = L.vectorGrid.slicer(polygon_json, {
     // A plain set of L.Path options.
     sliced: {
       weight: 2,
-      color: "#ffff00",
+      color: "#ff5500",
       fill: true,
       opacity: 0.65
     }
@@ -45,10 +45,26 @@ var slicer_layer = L.vectorGrid.slicer(polygon_json, {
 // cd mvt_tile
 // gzip -d -v -r -S .pbf *
 // find . -type f -exec mv -v '{}' '{}'.pbf \;
-let ogr_layer = L.vectorGrid.protobuf("geojson/ogr_tile/{z}/{x}/{y}.pbf", {
-  vectorTileLayerStyles: {}
-});
-
+let ogr_layer = L.vectorGrid
+  .protobuf("geojson/ogr_tile/{z}/{x}/{y}.pbf", {
+    maxNativeZoom: 14,
+    minNativeZoom: 2,
+    minZoom: 14,
+    maxZoom: 22,
+    indexMaxZoom: 5, // max zoom in the initial tile index
+    interactive: true,
+    rendererFactory: L.canvas.tile,
+    vectorTileLayerStyles: {
+      // layerごとのスタイル設定
+      "9001reproject": {
+        weight: 2,
+        color: "#00ff00",
+        opacity: 0.5,
+        fill: true
+      }
+    }
+  })
+  .addTo(mymap);
 
 let Map_o = {
   ogr: ogr_layer,
