@@ -25,21 +25,23 @@ var myStyle = {
 // vectortileとの比較用レイヤ
 // 普通のgeojson
 const polygon_json = get_json("geojson/9001reproject.geojson");
-var slicer_layer = L.vectorGrid.slicer(polygon_json, {
-  rendererFactory: L.canvas.tile,
-  maxZoom: 22,
-  indexMaxZoom: 5, // max zoom in the initial tile index
-  interactive: true,
-  vectorTileLayerStyles: {
-    // A plain set of L.Path options.
-    sliced: {
-      weight: 2,
-      color: "#ff5500",
-      fill: true,
-      opacity: 0.65
+var slicer_layer = L.vectorGrid
+  .slicer(polygon_json, {
+    rendererFactory: L.canvas.tile,
+    maxZoom: 22,
+    indexMaxZoom: 5, // max zoom in the initial tile index
+    interactive: true,
+    vectorTileLayerStyles: {
+      // A plain set of L.Path options.
+      sliced: {
+        weight: 2,
+        color: "#ff5500",
+        fill: true,
+        opacity: 0.65
+      }
     }
-  }
-});
+  })
+  .addTo(mymap);
 
 // ogr2ogr -f MVT ogr_tile 9001reproject.geojson -dsco MAXZOOM=19
 // cd mvt_tile
