@@ -59,15 +59,7 @@ var slicer_layer = L.vectorGrid.slicer(polygon_json, {
     }
   }
 });
-// tippecanoe -l gs_map -rg -z18 -Z6 -o mvt.mbtiles 9001reproject.geojson
-// tippecanoe -o mvt.mbtiles 9001reproject.geojson
-// mb-util --image_format=pdf mvt.mbtiles mvt_tile
-// cd mvt_tile
-// gzip -d -v -r -S .pbf *
-// find . -type f -exec mv -v '{}' '{}'.pbf \;
-let mvt_layer = L.vectorGrid.protobuf("geojson/mvt_tile/{z}/{x}/{y}.pbf", {
-  vectorTileLayerStyles: {}
-});
+
 // ogr2ogr -f MVT ogr_tile 9001reproject.geojson -dsco MAXZOOM=19
 // cd mvt_tile
 // gzip -d -v -r -S .pbf *
@@ -76,47 +68,6 @@ let ogr_layer = L.vectorGrid.protobuf("geojson/ogr_tile/{z}/{x}/{y}.pbf", {
   vectorTileLayerStyles: {}
 });
 
-// tippecanoe -e veg 9001reproject.geojson
-// gzip -d -v -r -S .pbf *
-// find . -type f -exec mv -v '{}' '{}'.pbf \;
-let protobuf_layer = L.vectorGrid.protobuf("geojson/hoge/veg/{z}/{x}/{y}.pbf", {
-  maxNativeZoom: 14,
-  minNativeZoom: 2,
-  minZoom: 14,
-  maxZoom: 22,
-  indexMaxZoom: 5, // max zoom in the initial tile index
-  interactive: true,
-  rendererFactory: L.canvas.tile,
-  vectorTileLayerStyles: {
-    "9001reproject": {
-      weight: 2,
-      color: "#ff3088",
-      opacity: 0.5,
-      fill: true
-    }
-  }
-});
-
-// no zip option
-// tippecanoe -e tipp_veg -pC -z19  9001reproject.geojson
-// TODO: tilel option test
-let tipp_layer = L.vectorGrid.protobuf("geojson/tipp_veg/{z}/{x}/{y}.pdf", {
-  maxNativeZoom: 14,
-  minNativeZoom: 2,
-  minZoom: 14,
-  maxZoom: 22,
-  indexMaxZoom: 5, // max zoom in the initial tile index
-  interactive: true,
-  rendererFactory: L.canvas.tile,
-  vectorTileLayerStyles: {
-    "9001reproject": {
-      weight: 2,
-      color: "red",
-      opacity: 0.5,
-      fill: true
-    }
-  }
-});
 
 let Map_o = {
   mvt: mvt_layer,
