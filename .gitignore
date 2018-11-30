@@ -1,6 +1,7 @@
-geojson/
 lib/
 .vscode/
 node_modules/
 .DS_Store
 source_data/
+geojson/shp
+geojson/haikei_tile
