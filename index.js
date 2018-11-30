@@ -24,7 +24,7 @@ var myStyle = {
 
 // vectortileとの比較用レイヤ
 // 普通のgeojson
-const polygon_json = get_json("geojson/9001reproject.geojson");
+const polygon_json = get_json("geojson/9001.geojson");
 var slicer_layer = L.vectorGrid
   .slicer(polygon_json, {
     rendererFactory: L.canvas.tile,
@@ -43,26 +43,28 @@ var slicer_layer = L.vectorGrid
   })
   .addTo(mymap);
 
-// ogr2ogr -f MVT ogr_tile 9001reproject.geojson -dsco MAXZOOM=19
+let osm = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+  // 権利関係?右したとかに出る
+  attribution:
+    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+});
+// EPSG:4326に変換
+// ogr2ogr -f MVT haikei_tile ./shp/gyousei.shp -dsco MAXZOOM=19
 // cd mvt_tile
 // gzip -d -v -r -S .pbf *
 // find . -type f -exec mv -v '{}' '{}'.pbf \;
 let ogr_layer = L.vectorGrid
-  .protobuf("geojson/ogr_tile/{z}/{x}/{y}.pbf", {
-    maxNativeZoom: 14,
-    minNativeZoom: 2,
-    minZoom: 14,
-    maxZoom: 22,
+  .protobuf("./geojson/haikei_tile/{z}/{x}/{y}.pbf", {
+    minZoom: 1,
+    maxZoom: 19,
     indexMaxZoom: 5, // max zoom in the initial tile index
     interactive: true,
     rendererFactory: L.canvas.tile,
     vectorTileLayerStyles: {
       // layerごとのスタイル設定
-      "9001reproject": {
-        weight: 2,
-        color: "#00ff00",
-        opacity: 0.5,
-        fill: true
+      gyousei: {
+        weight: 0.1,
+        color: "#00ff00"
       }
     }
   })
@@ -73,8 +75,8 @@ let Map_o = {
   slicer: slicer_layer
 };
 
-let Map_b = {};
+let Map_b = { osm: osm };
 L.control.scale({ maxWidth: 250, imperial: false }).addTo(mymap);
 L.control.layers(Map_b, Map_o, { collapsed: false }).addTo(mymap);
-// let hash = L.hash(mymap);
+let hash = L.hash(mymap);
 // };
