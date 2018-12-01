@@ -25,23 +25,31 @@ var myStyle = {
 // vectortileとの比較用レイヤ
 // 普通のgeojson
 const polygon_json = get_json("geojson/9001.geojson");
-var slicer_layer = L.vectorGrid
-  .slicer(polygon_json, {
-    rendererFactory: L.canvas.tile,
-    maxZoom: 22,
-    indexMaxZoom: 5, // max zoom in the initial tile index
-    interactive: true,
-    vectorTileLayerStyles: {
-      // A plain set of L.Path options.
-      sliced: {
-        weight: 2,
-        color: "#ff5500",
-        fill: true,
-        opacity: 0.65
-      }
-    }
-  })
-  .addTo(mymap);
+var tate = new L.StripePattern({ color: "#ff5500" });
+tate.addTo(mymap);
+
+let polygon_layer = L.geoJson(polygon_json, {
+  onEachFeature: function(feat, layer) {
+    // 地物をクリックしたら、起る動作
+    const columns = ["遺跡名", "区番号", "所在地", "時代", "種類", "備考"];
+    const headers = columns.map(value => "<th>" + value + "</th>").join("");
+
+    const values = columns
+      .map(value => (feat.properties[value] ? feat.properties[value] : ""))
+      .map(value => "<td>" + value + "</td>")
+      .join("");
+    const table =
+      "<table><tr>" + headers + "</tr>" + "<tr>" + values + "</tr></table>";
+    layer.bindPopup(table);
+  },
+  style: {
+    weight: 2,
+    color: "#ff5500",
+    // fill: true,
+    opacity: 0.65,
+    fillPattern: tate
+  }
+}).addTo(mymap);
 
 let osm = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
   // 権利関係?右したとかに出る
@@ -72,11 +80,11 @@ let ogr_layer = L.vectorGrid
 
 let Map_o = {
   ogr: ogr_layer,
-  slicer: slicer_layer
+  polygon: polygon_layer
 };
 
 let Map_b = { osm: osm };
 L.control.scale({ maxWidth: 250, imperial: false }).addTo(mymap);
 L.control.layers(Map_b, Map_o, { collapsed: false }).addTo(mymap);
-let hash = L.hash(mymap);
+// let hash = L.hash(mymap);
 // };
